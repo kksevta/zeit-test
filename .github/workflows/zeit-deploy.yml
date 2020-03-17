@@ -1,0 +1,33 @@
+name: example - angular
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+jobs:
+  angular:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: build
+        run: |
+          npm install
+      - uses: ./
+        id: now-deployment-staging
+        if: github.event_name == 'pull_request'
+        with:
+          zeit-token: YkL0igIIPBq3p56xH3q9LDxa
+          now-org-id: 3yxu3q6HMTkt3RMribJH3wsW
+          now-project-id: QmauDw7jTuxfiNJS41bqVomWy1QbACu7jSMcz9XeFJ21iN
+          working-directory: ./
+      - uses: ./
+        id: now-deployment-production
+        if: github.event_name == 'push'
+        with:
+          zeit-token: YkL0igIIPBq3p56xH3q9LDxa
+          now-org-id: 3yxu3q6HMTkt3RMribJH3wsW
+          now-project-id: QmauDw7jTuxfiNJS41bqVomWy1QbACu7jSMcz9XeFJ21iN
+          working-directory: ./
+          now-args: '--prod '
